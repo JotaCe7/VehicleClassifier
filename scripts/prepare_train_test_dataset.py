@@ -33,7 +33,9 @@ The resulting directory structure should look like this:
     │   │   │   ├── ...
 """
 import argparse
-
+from os import link, makedirs
+from os.path import join, isdir
+from csv import DictReader
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train your model.")
@@ -81,13 +83,17 @@ def main(data_folder, labels, output_data_folder):
         Full path to the directory in which we will store the resulting
         train/test splits.
     """
-    # For this function, you must:
-    #   1. Load labels CSV file
-    #   2. Iterate over each row in the CSV, create the corresponding
-    #      train/test and class folders
-    #   3. Copy the image to the new folder structure. We recommend you to
-    #      use `os.link()` to avoid wasting disk space with duplicated files
-    # TODO
+    
+    # Load labels CSV file
+    with open(labels,'r') as f:
+      f_reader = DictReader(f)
+      # Iterate over each row in the CSV, create the corresponding train/test and class folders
+      for row in f_reader:
+        # Copy the image to the new folder structure
+        if not isdir(join(output_data_folder,row['subset'], row["class"])):
+          makedirs(join(output_data_folder,row['subset'], row["class"]))
+        link(join(data_folder, row['img_name']),join(output_data_folder,row['subset'],row['class'],row['img_name']))
+    #"mkdir -p  /{src_dir}/; ln -s /link_file_path/file /create_your_path/".format(data_folder)
 
 
 if __name__ == "__main__":
