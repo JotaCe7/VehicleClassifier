@@ -1,5 +1,5 @@
 import os
-
+import yaml
 
 def validate_config(config):
     """
@@ -24,7 +24,6 @@ def validate_config(config):
 def load_config(config_file_path):
     """
     Loads experiment settings from a YAML file into a Python dict.
-    See: https://pyyaml.org/.
 
     Parameters
     ----------
@@ -37,12 +36,11 @@ def load_config(config_file_path):
     config : dict
         Experiment settings as a Python dict.
     """
-    # TODO
     # Load config here and assign to `config` variable
-    config = None
+    with open(config_file_path) as fh:
+      config = yaml.safe_load(fh)
 
-    # Don't remove this as will help you doing some basic checks on config
-    # content
+    # Basic checks on config content
     validate_config(config)
 
     return config
