@@ -8,13 +8,13 @@ You can use `Docker` to install all the needed packages and libraries easily. Tw
 - **CPU:**
 
 ```bash
-$ docker build -t sp_05 -f docker/Dockerfile .
+$ docker build -t vehicleclassification -f docker/Dockerfile .
 ```
 
 - **GPU:**
 
 ```bash
-$ docker build -t sp_05 -f docker/Dockerfile_gpu .
+$ docker build -t vehicleclassification_gpu -f docker/Dockerfile_gpu .
 ```
 
 ### Run Docker
@@ -23,9 +23,9 @@ $ docker build -t sp_05 -f docker/Dockerfile_gpu .
 
 ```bash
 $ docker run --rm --net host -it \
-    -v $(pwd):/home/app/src \
+    -v "$(pwd):/home/app/src" \
     --workdir /home/app/src \
-    sp_05 \
+    vehicleclassification \
     bash
 ```
 
@@ -35,7 +35,7 @@ $ docker run --rm --net host -it \
 $ docker run --rm --net host --gpus all -it \
     -v $(pwd):/home/app/src \
     --workdir /home/app/src \
-    sp_05 \
+    vehicleclassification_gpu \
     bash
 ```
 
