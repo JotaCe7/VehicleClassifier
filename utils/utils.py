@@ -1,3 +1,5 @@
+from tensorflow.keras.utils import load_img, img_to_array
+import numpy as np
 import os
 import yaml
 
@@ -91,7 +93,7 @@ def walkdir(folder):
             yield (dirpath, filename)
 
 
-def predict_from_folder(folder, model, input_size, class_names):
+def predict_from_folder(folder, model=None, input_size=None, class_names=None):
     """
     Walk through all the image files in a directory, loads them, applies
     the corresponding pre-processing and sends to the model to get
@@ -126,18 +128,21 @@ def predict_from_folder(folder, model, input_size, class_names):
             - labels: is the list of the true labels, we will use them to
                       compare against model predictions.
     """
-    # Use keras.utils.load_img() to correctly load the image and
-    # keras.utils.img_to_array() to convert it to the format needed
-    # before sending it to our model.
-    # You can use os.walk() or walkdir() to iterate over the files in the
-    # folder.
-    # Don't forget you must not return the raw model prediction. Model
-    # prediction will be a vector assigning probability scores to each
-    # class. You must take the position of the element in the vector with
-    # the highest probability and use that to get the corresponding class
-    # name from `class_names` list.
-    # TODO
-    predictions = None
-    labels = None
 
+    predictions = []
+    labels = []
+    
+    for file in walkdir(folder):
+      # Load image and correct its dimmension
+      image = load_img(os.path.join(*file), target_size=input_size)
+      x = img_to_array(image)
+      x_batch = np.expand_dims(x, axis=0)
+      # Make prediction and keep the one with highest probability
+      y_pred = model.predict(x_batch)
+      prediction = class_names[np.argmax(y_pred)] #y_pred.argmax()
+      predictions.append(prediction)
+      pre_label = os.path.dirname(os.path.join(*file))
+      label = os.path.basename(pre_label)
+      labels.append(label)
+    
     return predictions, labels
