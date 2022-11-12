@@ -1,4 +1,5 @@
 from tensorflow import keras, float32
+from tensorflow.keras.applications import resnet50
 from utils.data_aug import create_data_aug_layer
 
 
@@ -73,6 +74,7 @@ def create_model(
         # TODO
 
         # Add a layer for preprocessing the input images values
+        preprocessed_input = keras.applications.resnet50.preprocess_input(input)
 
         # Create the corresponding core model using
         # keras.applications.ResNet50()
