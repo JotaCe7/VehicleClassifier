@@ -75,7 +75,7 @@ def create_model(
         # TODO
 
         # Add a layer for preprocessing the input images values
-        preprocessed_input = resnet50.preprocess_input(input)
+        x = resnet50.preprocess_input(input)
 
         # Instantiate core model with pre-trained weights
         core_model = resnet50.ResNet50(
@@ -89,11 +89,11 @@ def create_model(
         # Add a single dropout layer for regularization
         x = keras.layers.Dropout(dropout_rate)(x)
 
-        # Add the classification layer here, use keras.layers.Dense() and
-        # `classes` parameter
-        # Assign it to `outputs` variable
-        # TODO
-        outputs = None
+        # Add classification layer
+        outputs = keras.layers.Dense(classes,
+                                     kernel_regularizer='l2',
+                                     activation='softmax')(x)
+
 
         # Now you have all the layers in place, create a new model
         # Use keras.Model()
