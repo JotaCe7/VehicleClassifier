@@ -74,15 +74,15 @@ def create_model(
         # TODO
 
         # Add a layer for preprocessing the input images values
-        preprocessed_input = keras.applications.resnet50.preprocess_input(input)
+        preprocessed_input = resnet50.preprocess_input(input)
 
-        # Create the corresponding core model using
-        # keras.applications.ResNet50()
-        # The model created here must follow this requirements:
-        #   1. Use imagenet weights
-        #   2. Drop top layer (imagenet classification layer)
-        #   3. Use Global average pooling as model output
-        # TODO
+        # Instantiate core model with pre-trained weights
+        base_model = resnet50.ResNet50(
+                                        weights='imagenet',
+                                        input_shape=input_shape,
+                                        include_top=False,
+                                        pooling="avg"
+                                      )        
 
         # Add a single dropout layer for regularization, use
         # keras.layers.Dropout()
