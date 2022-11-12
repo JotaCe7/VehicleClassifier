@@ -94,17 +94,13 @@ def create_model(
                                      kernel_regularizer='l2',
                                      activation='softmax')(x)
 
-
-        # Now you have all the layers in place, create a new model
-        # Use keras.Model()
-        # Assign it to `model` variable
-        # TODO
-        model = None
+        # Create the model
+        model = keras.Model(input, outputs)
     else:
         # For this particular case we want to load our already defined and
         # finetuned model, see how to do this using keras
         # Assign it to `model` variable
         # TODO
-        model = None
+        model = keras.models.load_model(weights)
 
     return model
