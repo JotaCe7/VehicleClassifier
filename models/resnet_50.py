@@ -9,6 +9,7 @@ def create_model(
     dropout_rate: float = 0.0,
     data_aug_layer: dict = None,
     classes: int = None,
+    training: bool = False
 ):
     """
     Creates and loads the Resnet50 model we will use for our experiments.
@@ -77,16 +78,16 @@ def create_model(
         preprocessed_input = resnet50.preprocess_input(input)
 
         # Instantiate core model with pre-trained weights
-        base_model = resnet50.ResNet50(
+        core_model = resnet50.ResNet50(
                                         weights='imagenet',
                                         input_shape=input_shape,
                                         include_top=False,
                                         pooling="avg"
-                                      )        
+                                      )
+        x = core_model(x, training = training)
 
-        # Add a single dropout layer for regularization, use
-        # keras.layers.Dropout()
-        # TODO
+        # Add a single dropout layer for regularization
+        x = keras.layers.Dropout(dropout_rate)(x)
 
         # Add the classification layer here, use keras.layers.Dense() and
         # `classes` parameter
