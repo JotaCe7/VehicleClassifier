@@ -64,15 +64,12 @@ def create_model(
         predictions.
     """
 
-    # Create the model to be used for finetuning here!
     if weights == "imagenet":
         # Define the Input layer
         input = keras.layers.Input(shape=(input_shape), dtype=float32)
 
-        # Create the data augmentation layers here and add to the model next
-        # to the input layer
-        # If no data augmentation was used, skip this
-        # TODO
+        # Add augmentation layer
+        x = create_data_aug_layer(data_aug_layer)(input) if data_aug_layer else input
 
         # Add a layer for preprocessing the input images values
         x = resnet50.preprocess_input(input)
