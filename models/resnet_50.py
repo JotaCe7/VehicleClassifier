@@ -1,3 +1,4 @@
+from tensorflow import keras, float32
 from utils.data_aug import create_data_aug_layer
 
 
@@ -64,11 +65,7 @@ def create_model(
     # Create the model to be used for finetuning here!
     if weights == "imagenet":
         # Define the Input layer
-        # Assign it to `input` variable
-        # Use keras.layers.Input(), following this requirements:
-        #   1. layer dtype must be tensorflow.float32
-        # TODO
-        input = None
+        input = keras.layers.Input(shape=(input_shape), dtype=float32)
 
         # Create the data augmentation layers here and add to the model next
         # to the input layer
@@ -76,10 +73,6 @@ def create_model(
         # TODO
 
         # Add a layer for preprocessing the input images values
-        # E.g. change pixels interval from [0, 255] to [0, 1]
-        # Resnet50 already has a preprocessing function you must use here
-        # See keras.applications.resnet50.preprocess_input()
-        # TODO
 
         # Create the corresponding core model using
         # keras.applications.ResNet50()
