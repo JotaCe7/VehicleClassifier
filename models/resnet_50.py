@@ -9,7 +9,7 @@ def create_model(
     dropout_rate: float = 0.0,
     data_aug_layer: dict = None,
     classes: int = None,
-    training: bool = False
+    trainable: bool = True
 ):
     """
     Creates and loads the Resnet50 model we will use for our experiments.
@@ -74,14 +74,15 @@ def create_model(
         # Add a layer for preprocessing the input images values
         x = resnet50.preprocess_input(input)
 
-        # Instantiate core model with pre-trained weights
+        # Instantiate ResNet50 architecture
         core_model = resnet50.ResNet50(
-                                        weights='imagenet',
-                                        input_shape=input_shape,
-                                        include_top=False,
-                                        pooling="avg"
+                                        weights='imagenet',       # Load weights pre*trained on ImageNet
+                                        input_shape=input_shape,  # image shape
+                                        include_top=False,        # Do not include tehe ImageNet classifier at the top
+                                        pooling="avg"             # gloval average pooling
                                       )
-        x = core_model(x, training = training)
+        core_model.trainable = trainable # Freeze core model or not
+        x = core_model(x, training = True)
 
         # Add a single dropout layer for regularization
         x = keras.layers.Dropout(dropout_rate)(x)
@@ -94,10 +95,7 @@ def create_model(
         # Create the model
         model = keras.Model(input, outputs)
     else:
-        # For this particular case we want to load our already defined and
-        # finetuned model, see how to do this using keras
-        # Assign it to `model` variable
-        # TODO
+        # Load our already defined and finetuned model,
         model = keras.models.load_model(weights)
 
     return model
