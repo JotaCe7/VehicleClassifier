@@ -72,7 +72,7 @@ def create_model(
         x = create_data_aug_layer(data_aug_layer)(input) if data_aug_layer else input
 
         # Add a layer for preprocessing the input images values
-        x = resnet50.preprocess_input(input)
+        x = resnet50.preprocess_input(x)
 
         # Instantiate ResNet50 architecture
         core_model = resnet50.ResNet50(
