@@ -1,5 +1,6 @@
+from tensorflow.keras import layers, Sequential
 
-def create_data_aug_layer(data_aug_layer):
+def create_data_aug_layer(data_aug_layer: dict):
     """
     Use this function to parse the data augmentation methods for the
     experiment and create the corresponding layers.
@@ -23,16 +24,17 @@ def create_data_aug_layer(data_aug_layer):
     data_augmentation : keras.Sequential
         Sequential model having the data augmentation layers inside.
     """
-    # Parse config and create layers
-    # You can use as a guide on how to pass config parameters to keras
-    # looking at the code in `scripts/train.py`
-    # TODO
-    # Append the data augmentation layers on this list
+    
     data_aug_layers = []
 
-    # Return a keras.Sequential model having the the new layers created
-    # Assign to `data_augmentation` variable
-    # TODO
-    data_augmentation = None
+    for key, value in data_aug_layer.items():
+      # Instantiate clsas from module, get class name from dicrionary keys
+      Layer = getattr(layers, key.replace("_"," ").title().replace(" ",""))
+      layer = Layer()
+      # Append the data augmentation layers on this list
+      data_aug_layers.append(layer(value))
+
+    # Return a keras.Sequential model having the new layers created
+    data_augmentation = Sequential(layers=data_aug_layers)
 
     return data_augmentation
