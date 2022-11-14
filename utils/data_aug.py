@@ -30,9 +30,7 @@ def create_data_aug_layer(data_aug_layer: dict):
     for key, value in data_aug_layer.items():
       # Instantiate clsas from module, get class name from dicrionary keys
       Layer = getattr(layers, key.replace("_"," ").title().replace(" ",""))
-      layer = Layer()
-      # Append the data augmentation layers on this list
-      data_aug_layers.append(layer(**value))
+      data_aug_layers.append(Layer(**value))
 
     # Return a keras.Sequential model having the new layers created
     data_augmentation = Sequential(layers=data_aug_layers)
