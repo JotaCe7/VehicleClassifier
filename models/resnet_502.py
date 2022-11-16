@@ -60,7 +60,7 @@ def create_model(
 
         kernel_regularizer = regularizers.L1L2(l1=1e-5, l2=1e-4)
 
-        outputs = keras.layers.Dense(classes, kernel_regularizer=regularizers.L1(1e-4), activation='softmax')(model)
+        outputs = keras.layers.Dense(classes, kernel_regularizer=regularizers.L2(1e-4), activation='softmax')(model)
         # kernel_regularizer=regularizers.L1L2(
         # l1=1e-5, l2=1e-4),
         # Now you have all the layers in place, create a new model

@@ -3,4 +3,5 @@ data/
 */.pytest_cache
 *.h5
 logs/
-experiments/
+*.zip
+Model Evaluation copy.ipynb
