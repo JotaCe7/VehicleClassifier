@@ -1,3 +1,6 @@
 data/
 */__pycache__/
 */.pytest_cache
+*.h5
+logs/
+experiments/

@@ -11,6 +11,7 @@ class TestResnet50(unittest.TestCase):
         input_shape = (128, 128, 3)
         dropout_rate = 0.1
         classes = 25
+        print("dsdsd")
         model = create_model(
             weights=weights,
             input_shape=input_shape,
