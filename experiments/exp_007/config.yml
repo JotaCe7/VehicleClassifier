@@ -6,7 +6,7 @@ data:
   label_mode: "categorical"
   validation_split: 0.2
   image_size: [224, 224]
-  batch_size: 64
+  batch_size: 32
 
 model:
   weights: "imagenet"
