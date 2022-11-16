@@ -48,7 +48,7 @@ $ pytest tests/
 
 ## Working on the project
 
-Below you will the steps and the order in which we think you should solve this project.
+Below you will see the steps and the order in which we think you should solve this project.
 
 ### 2. Prepare your data
 

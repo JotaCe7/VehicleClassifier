@@ -8,8 +8,8 @@ def create_model(
     input_shape: tuple = (224, 224, 3),
     dropout_rate: float = 0.0,
     data_aug_layer: dict = None,
-    classes: int = None,
-    trainable: bool = True
+    classes: int = 196,
+    trainable: bool = False
 ):
     """
     Creates and loads the Resnet50 model we will use for our experiments.
@@ -82,14 +82,14 @@ def create_model(
                                         pooling="avg"             # gloval average pooling
                                       )
         core_model.trainable = trainable # Freeze core model or not
-        x = core_model(x, training = True)
+        x = core_model(x, training = False)
 
         # Add a single dropout layer for regularization
         x = keras.layers.Dropout(dropout_rate)(x)
 
         # Add classification layer
         outputs = keras.layers.Dense(classes,
-                                     kernel_regularizer='l2',
+        #                            kernel_regularizer='l2',
                                      activation='softmax')(x)
 
         # Create the model
