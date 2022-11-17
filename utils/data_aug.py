@@ -32,16 +32,6 @@ def create_data_aug_layer(data_aug_layer: dict):
       Layer = getattr(layers, key.replace("_"," ").title().replace(" ",""))
       data_aug_layers.append(Layer(**value))
     
-    # if "random_flip" in data_aug_layer:
-    #   data_aug_layers.append(layers.RandomFlip(**data_aug_layer["random_flip"]))
-
-    # if 'random_rotation' in data_aug_layer:
-    #     data_aug_layers.append(layers.RandomRotation(**data_aug_layer['random_rotation']))
-
-    # if 'random_zoom' in data_aug_layer:
-    #     data_aug_layers.append(layers.RandomZoom(**data_aug_layer['random_zoom']))
-
-    # Return a keras.Sequential model having the new layers created
     data_augmentation = Sequential(layers=data_aug_layers)
 
     return data_augmentation
