@@ -32,7 +32,10 @@ def create_model(
     dropout_rate: float = 0.0,
     data_aug_layer: dict = None,
     classes: int = 196,
-    trainable: bool = False
+    kernel_regularizer = None,
+    bias_regularizer= None,
+    trainable: bool = False,
+    unfreeze_layers = 0
 ):
     """
     Creates and loads the Resnet50 model we will use for our experiments.
@@ -112,9 +115,13 @@ def create_model(
         # Add a single dropout layer for regularization
         x = keras.layers.Dropout(dropout_rate)(x)
 
+        regularizer = keras.regularizers
+
         # Add classification layer
         outputs = keras.layers.Dense(classes,
-        #                            kernel_regularizer='l2',
+                                    kernel_regularizer=kernel_regularizer',
+                                    bias_regularizer=bias_regularizer,
+                                    activation_regulatizer=
                                      activation='softmax')(x)
 
         # Create the model
