@@ -30,3 +30,11 @@ fit:
             save_best_only: true
         tensor_board:
             log_dir: "/home/app/src/experiments/exp_001/logs"
+        early_stopping:
+            monitor: "val_accuracy"
+            mode: "max"
+            pattience: 15
+            min_delta: 0.005
+
+
+
