@@ -3,6 +3,31 @@ from utils.data_aug import create_data_aug_layer
 
 from tensorflow import keras
 import tensorflow as tf
+from keras.layers import BatchNormalization
+
+def get_number_of_trainable(layers):
+    trainables = 0
+    not_trainables = 0
+    for layer in layers:
+      if layer.trainable:
+        trainables = trainables + 1
+      else:
+        not_trainables = not_trainables + 1
+    
+    print('*****************************')
+    print('Trainable layers:', trainables)
+    print('Not trainable layers:', not_trainables)
+    return trainables, not_trainables
+
+def set_n_last_layers(layers, nlayers: int, trainable : bool = True):
+  nLayers = 0
+  for layer in layers:
+    nLayers +=1
+    if (nLayers > (len(layers) -nlayers)):
+      layer.trainable = False if isinstance(layer, BatchNormalization) else True
+    else:
+      layer.trainable = False 
+
 
 
 def create_model(
@@ -47,8 +72,11 @@ def create_model(
         #   2. Drop top layer (imagenet classification layer)
         #   3. Use Global average pooling as model output
 
-        core_model = keras.applications.resnet50.ResNet50(weights="imagenet",
-                                                          include_top=False, pooling="avg")
+        core_model = keras.applications.resnet50.ResNet50(
+                                      weights="imagenet",
+                                      include_top=False,
+                                      pooling="avg"
+                                      )
         core_model.trainable = False
         model = core_model(prepro, training=False)
 
@@ -60,7 +88,7 @@ def create_model(
 
         kernel_regularizer = regularizers.L1L2(l1=1e-5, l2=1e-4)
 
-        outputs = keras.layers.Dense(classes, kernel_regularizer=regularizers.L2(1e-4), activation='softmax')(model)
+        outputs = keras.layers.Dense(classes, kernel_regularizer=regularizers.L1(1e-4), activation='softmax')(model)
         # kernel_regularizer=regularizers.L1L2(
         # l1=1e-5, l2=1e-4),
         # Now you have all the layers in place, create a new model

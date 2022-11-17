@@ -3,6 +3,29 @@ from tensorflow.keras.applications import resnet50
 from utils.data_aug import create_data_aug_layer
 
 
+def get_number_of_trainable(layers):
+    trainables = 0
+    not_trainables = 0
+    for layer in layers:
+      if layer.trainable:
+        trainables = trainables + 1
+      else:
+        not_trainables = not_trainables + 1
+    
+    print('*****************************')
+    print('Trainable layers:', trainables)
+    print('Not trainable layers:', not_trainables)
+    return trainables, not_trainables
+
+def set_n_last_layers(layers, nlayers: int, trainable : bool = True):
+  nLayers = 0
+  for layer in layers:
+    nLayers +=1
+    if (nLayers > (len(layers) -nlayers)):
+      layer.trainable = False if isinstance(layer, keras.layers.BatchNormalization) else True
+    else:
+      layer.trainable = False 
+
 def create_model(
     weights: str = "imagenet",
     input_shape: tuple = (224, 224, 3),
@@ -69,15 +92,17 @@ def create_model(
         input = keras.layers.Input(shape=(input_shape), dtype=float32)
 
         # Add augmentation layer
-        x = create_data_aug_layer(data_aug_layer)(input) if data_aug_layer else input
+        #x = create_data_aug_layer(data_aug_layer)(input) if data_aug_layer else input
+        if data_aug_layer is not None:
+          input = create_data_aug_layer(data_aug_layer)(input)
 
         # Add a layer for preprocessing the input images values
-        x = resnet50.preprocess_input(x)
+        x = resnet50.preprocess_input(input)
 
         # Instantiate ResNet50 architecture
         core_model = resnet50.ResNet50(
                                         weights='imagenet',       # Load weights pre*trained on ImageNet
-                                        input_shape=input_shape,  # image shape
+                                        #input_shape=input_shape,  # image shape
                                         include_top=False,        # Do not include tehe ImageNet classifier at the top
                                         pooling="avg"             # gloval average pooling
                                       )

@@ -9,7 +9,7 @@ import argparse
 import tensorflow as tf
 from tensorflow import keras
 
-from models import resnet_502
+from models import resnet_50
 from utils import utils
 
 # Prevent tensorflow to allocate the entire GPU
@@ -127,8 +127,10 @@ def main(config_file):
     )
 
     # Creates a Resnet50 model for finetuning
-    cnn_model = resnet_502.create_model(**config["model"])
+    cnn_model = resnet_50.create_model(**config["model"])
     print(cnn_model.summary())
+
+    
 
     # Compile model, prepare for training
     optimizer = parse_optimizer(config)
