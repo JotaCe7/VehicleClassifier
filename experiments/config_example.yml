@@ -21,6 +21,17 @@ model:
     random_zoom:
       height_factor: 0.2
       width_factor: 0.2
+  regularizers:
+    kernel_regularizer:
+      L1:
+        l1: 0.001
+    activity_regularizer:
+      L2:
+        l2: 0.001
+  
+  n_dense_layers: 3
+  n_unfreeze_layers: 8
+  trainable: true
 
 compile:
   optimizer:
@@ -31,7 +42,7 @@ compile:
   metrics: ["accuracy"]
 
 fit:
-  epochs: 50
+  epochs: 100
   callbacks:
     model_checkpoint:
       filepath: "/home/app/src/experiments/exp_007/model.{epoch:02d}-{val_loss:.4f}.h5"
@@ -41,5 +52,5 @@ fit:
     early_stopping:
         monitor: "val_accuracy"
         mode: "max"
-        pattience: 15
+        patience: 10
         min_delta: 0.005

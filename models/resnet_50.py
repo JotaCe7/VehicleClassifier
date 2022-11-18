@@ -1,6 +1,7 @@
 from tensorflow import keras, float32
 from tensorflow.keras.applications import resnet50
 from utils.data_aug import create_data_aug_layer
+from utils.regularizer import create_regularizer
 
 
 def get_number_of_trainable(layers):
@@ -17,12 +18,13 @@ def get_number_of_trainable(layers):
     print('Not trainable layers:', not_trainables)
     return trainables, not_trainables
 
-def set_n_last_layers(layers, nlayers: int, trainable : bool = True):
+def unfreeze_n_last_layers(layers, nlayers: int, trainable : bool = True):
   nLayers = 0
   for layer in layers:
     nLayers +=1
     if (nLayers > (len(layers) -nlayers)):
       layer.trainable = False if isinstance(layer, keras.layers.BatchNormalization) else True
+      #layer.trainable = True
     else:
       layer.trainable = False 
 
@@ -32,10 +34,11 @@ def create_model(
     dropout_rate: float = 0.0,
     data_aug_layer: dict = None,
     classes: int = 196,
-    kernel_regularizer = None,
-    bias_regularizer= None,
+    regularizers: dict = {},
+    output_regularizer: dict = {},
     trainable: bool = False,
-    unfreeze_layers = 0
+    n_dense_layers=0,
+    n_unfreeze_layers=0
 ):
     """
     Creates and loads the Resnet50 model we will use for our experiments.
@@ -109,20 +112,39 @@ def create_model(
                                         include_top=False,        # Do not include tehe ImageNet classifier at the top
                                         pooling="avg"             # gloval average pooling
                                       )
-        core_model.trainable = trainable # Freeze core model or not
+        if n_unfreeze_layers > 0:
+          unfreeze_n_last_layers(core_model.layers, n_unfreeze_layers, trainable)
+        else:
+          core_model.trainable = trainable # Freeze core model or not
+
         x = core_model(x, training = False)
 
         # Add a single dropout layer for regularization
         x = keras.layers.Dropout(dropout_rate)(x)
 
-        regularizer = keras.regularizers
+        if bool(regularizers):
+          regularizers = create_regularizer(regularizers)
+
+
+
+        while n_dense_layers>1:
+          # Add a dense layer
+          x = keras.layers.Dense(2**(7+n_dense_layers),
+                                activation='relu',
+                                **regularizers)(x)
+          # Add a single dropout layer for regularization
+          x = keras.layers.Dropout(dropout_rate)(x)
+          n_dense_layers-=1
+
+        if bool(output_regularizer):
+          output_regularizer = create_regularizer(output_regularizer)
+
+
 
         # Add classification layer
         outputs = keras.layers.Dense(classes,
-                                    kernel_regularizer=kernel_regularizer',
-                                    bias_regularizer=bias_regularizer,
-                                    activation_regulatizer=
-                                     activation='softmax')(x)
+                                     activation='softmax',
+                                     **output_regularizer)(x)
 
         # Create the model
         model = keras.Model(input, outputs)

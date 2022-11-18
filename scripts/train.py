@@ -140,6 +140,7 @@ def main(config_file):
         **config["compile"],
     )
 
+
     # Start training!
     callbacks = parse_callbacks(config)
     cnn_model.fit(
