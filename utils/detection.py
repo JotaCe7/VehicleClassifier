@@ -61,7 +61,7 @@ def get_vehicle_coordinates(img):
     if len(vehicle_instances):
       # If there is at least one car or trcuk, get the coordinates for the biggest Box
       biggest_idx_box = vehicle_instances.pred_boxes.area().argmax().item()
-      box_coordinates = vehicle_instances.pred_boxes[biggest_idx_box].tensor[0].numpy()   
+      box_coordinates = vehicle_instances.pred_boxes[biggest_idx_box].tensor[0].numpy().astype(int)
 
     return box_coordinates
 

@@ -9,6 +9,10 @@ same directory structure with its subfolders but with new images.
 """
 
 import argparse
+import cv2
+from utils import utils, detection
+from os import makedirs
+from os.path import join, isdir, split, dirname
 
 
 def parse_args():
@@ -58,6 +62,21 @@ def main(data_folder, output_data_folder):
     #      to create additional subfolders following the original
     #      `data_folder` structure.
     # TODO
+    for file in utils.walkdir(data_folder):
+      # Load image and correct its dimmension
+      image = cv2.imread(join(*file))
+      box_coordinates = detection.get_vehicle_coordinates(image)
+      crop_img = image[box_coordinates[1]:box_coordinates[3], box_coordinates[0]:box_coordinates[2]]
+      output_path = join(output_data_folder, file[0].split(sep=data_folder)[1], file[1])
+      # cerate folder if it does not alreadt exist
+      if not isdir(dirname(output_path)):
+        makedirs(dirname(output_path))
+      # save cropped image
+      cv2.imwrite(output_path, crop_img)
+      print(output_path)
+
+
+
 
 
 if __name__ == "__main__":
