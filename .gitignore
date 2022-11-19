@@ -5,3 +5,4 @@ data/
 logs/
 *.zip
 Model Evaluation copy.ipynb
+/experiments
