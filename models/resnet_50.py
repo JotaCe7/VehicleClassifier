@@ -117,7 +117,7 @@ def create_model(
         else:
           core_model.trainable = trainable # Freeze core model or not
 
-        x = core_model(x, training = False)
+        x = core_model(x, training = trainable)
 
         # Add a single dropout layer for regularization
         x = keras.layers.Dropout(dropout_rate)(x)
@@ -151,5 +151,6 @@ def create_model(
     else:
         # Load our already defined and finetuned model,
         model = keras.models.load_model(weights)
+        model.trainable = True
 
     return model
