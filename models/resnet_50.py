@@ -5,6 +5,19 @@ from utils.regularizer import create_regularizer
 
 
 def get_number_of_trainable(layers):
+    """
+    Auxiliary function to check trainable and not trainable 
+    layer from a model
+    Argunments:
+    ----------
+    layers:
+        list of layers of a model (model.layers)
+    
+    Returns:
+    --------
+    number of trainable and not trainable layers as a tuple
+    
+    """
     trainables = 0
     not_trainables = 0
     for layer in layers:
@@ -18,7 +31,17 @@ def get_number_of_trainable(layers):
     print('Not trainable layers:', not_trainables)
     return trainables, not_trainables
 
-def unfreeze_n_last_layers(layers, nlayers: int, trainable : bool = True):
+def unfreeze_n_last_layers(layers, nlayers: int):
+  """
+  Freezes all the layers of a list of layers except the n last ones.
+  Also keeps all the Batch Normmalization layers frozen
+  Arguments:
+  ----------
+  layers:
+      list of layers of a model (model.layers)
+  nlayers:
+      number of last layers to unfreezes
+  """
   nLayers = 0
   for layer in layers:
     nLayers +=1
@@ -85,6 +108,27 @@ def create_model(
         Only needed when weights='imagenet'. Otherwise, the trained model
         already has the output classes number defined and we shouldn't change
         it.
+
+    regularizers : dict
+        Configuration from experiment YAML file used to create a regularizaer
+        to be used in intermediate Dense layers
+    
+    output_regularizer : dict
+        Configuration from experiment YAML file used to create a regularizaer
+        to be used in output Dense layers
+    
+    trainable : bool
+        Whete to enable some of the layers of resnet50 model to be trainable
+        or not
+    
+    n_dense_layers : int
+        Number of intermediate Dense layer between resnet50 model and output
+        layer.
+
+    n_unfreeze_layers : int
+        Number of last layers from resnet50 to unfreezee. Keep in mind that
+        even though we are not unfreezing BatchNormalization layer, we still
+        count them.
 
     Returns
     -------
