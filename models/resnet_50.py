@@ -47,9 +47,21 @@ def unfreeze_n_last_layers(layers, nlayers: int):
     nLayers +=1
     if (nLayers > (len(layers) -nlayers)):
       layer.trainable = False if isinstance(layer, keras.layers.BatchNormalization) else True
-      #layer.trainable = True
     else:
       layer.trainable = False 
+
+def inspect_layers(model):
+  """
+  Auxiliary function to inspect layers of a given model.
+  Use this to see wich number to pass as an argument to
+  unfreeze_n_last_layers
+  Arguments:
+  ---------
+    model: keras model class
+  """
+  for layers in model.layers:
+
+        print("{0}:\t{1}".format(layers.trainable, layers.name))
 
 def create_model(
     weights: str = "imagenet",
@@ -144,10 +156,12 @@ def create_model(
         # Add augmentation layer
         #x = create_data_aug_layer(data_aug_layer)(input) if data_aug_layer else input
         if data_aug_layer is not None:
-          input = create_data_aug_layer(data_aug_layer)(input)
+          x = create_data_aug_layer(data_aug_layer)(input)
 
-        # Add a layer for preprocessing the input images values
-        x = resnet50.preprocess_input(input)
+          # Add a layer for preprocessing the input images values
+          x = resnet50.preprocess_input(x)
+        else:
+           x = resnet50.preprocess_input(input)
 
         # Instantiate ResNet50 architecture
         core_model = resnet50.ResNet50(
@@ -195,6 +209,6 @@ def create_model(
     else:
         # Load our already defined and finetuned model,
         model = keras.models.load_model(weights)
-        model.trainable = True
-
+        model.trainable = trainable
+    
     return model
