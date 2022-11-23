@@ -171,7 +171,7 @@ def create_model(
                                         pooling="avg"             # gloval average pooling
                                       )
         if n_unfreeze_layers > 0:
-          unfreeze_n_last_layers(core_model.layers, n_unfreeze_layers, trainable)
+          unfreeze_n_last_layers(core_model.layers, n_unfreeze_layers)
         else:
           core_model.trainable = trainable # Freeze core model or not
 

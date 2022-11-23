@@ -32,6 +32,7 @@ CALLBACKS = {
     "model_checkpoint": keras.callbacks.ModelCheckpoint,
     "tensor_board": keras.callbacks.TensorBoard,
     "early_stopping": keras.callbacks.EarlyStopping,
+    "reduce_on_plateau": keras.callbacks.ReduceLROnPlateau,
 }
 
 

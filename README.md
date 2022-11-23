@@ -8,13 +8,13 @@ You can use `Docker` to install all the needed packages and libraries easily. Tw
 - **CPU:**
 
 ```bash
-$ docker build -t vehicleclassification -f docker/Dockerfile .
+$ docker build -t vehicleclassification_jc --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile .
 ```
 
 - **GPU:**
 
 ```bash
-$ docker build -t vehicleclassification_gpu -f docker/Dockerfile_gpu .
+$ docker build -t vehicleclassification_jc --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -f docker/Dockerfile_gpu .
 ```
 
 ### Run Docker
@@ -38,6 +38,7 @@ $ docker run --rm --net host --gpus all -it \
     vehicleclassification_gpu \
     bash
 ```
+
 
 ### Run Unit test
 
