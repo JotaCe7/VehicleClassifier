@@ -1,0 +1,64 @@
+seed: 123
+
+data:
+  directory: "/home/app/src/data/car_ims_v2/train"
+  labels: "inferred"
+  label_mode: "categorical"
+  validation_split: 0.2
+  image_size: [224, 224]
+  batch_size: 32
+
+model:
+  weights: "/home/app/src/experiments/exp_3/model.97-0.6800.h5"
+  input_shape: [224, 224, 3]
+  classes: 196
+  dropout_rate: 0.5
+  data_aug_layer:
+    random_flip:
+      mode: "horizontal"
+    random_rotation:
+      factor: 0.3
+    random_zoom:
+      height_factor: 0.2
+      width_factor: 0.2
+  regularizers:
+    kernel_regularizer:
+      L2:
+        l2: 0.001
+    activity_regularizer:
+      L2:
+        l2: 0.001
+  output_regularizer:
+    kernel_regularizer:
+      L2:
+          l2: 0.001
+  n_dense_layers: 2
+  n_unfreeze_layers: 8
+  trainable: true
+
+compile:
+  optimizer:
+    adam:
+      learning_rate: 0.0001
+
+  loss: "categorical_crossentropy"
+  metrics: ["accuracy"]
+
+fit:
+  epochs: 100
+  callbacks:
+    model_checkpoint:
+      filepath: "/home/app/src/experiments/exp_4/model.{epoch:02d}-{val_accuracy:.4f}.h5"
+      save_best_only: false
+    tensor_board:
+      log_dir: "/home/app/src/experiments/exp_4/logs"
+    reduce_on_plateau:
+      monitor: val_accuracy
+      factor: 0.5
+      patience: 10
+      verbose: 0
+      mode: auto
+      min_delta: 0.005
+      cooldown: 5
+      min_lr: 0
+    
